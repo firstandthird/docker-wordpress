@@ -33,7 +33,7 @@ if ! $(wp --allow-root core is-installed); then
     --admin_password="$WORDPRESS_ADMIN_PASS"
 fi
 
-if [[ -z "$THEME" ]]; then
+if [[ -n "$THEME" ]]; then
   wp --allow-root theme activate $THEME
 fi
 wp --allow-root rewrite structure '/%postname%/'
