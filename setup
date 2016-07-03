@@ -28,7 +28,7 @@ if ! $(wp --allow-root core is-installed); then
   wp --allow-root core install \
     --url="$WORDPRESS_URL" \
     --title=InspirED \
-    --admin_email="$WORDPRESS_EMAIL" \
+    --admin_email="$WORDPRESS_ADMIN_EMAIL" \
     --admin_name="$WORDPRESS_ADMIN_NAME" \
     --admin_password="$WORDPRESS_ADMIN_PASS"
 fi
