@@ -1,0 +1,41 @@
+#!/bin/bash
+
+#test if the service is up
+SERVICE_ADDR=mysql
+SERVICE_PORT=3306
+CONN_STATUS="DOWN"
+COUNTER=0
+while [ "$CONN_STATUS" == "DOWN" -a $COUNTER -lt 4 ]
+do
+  CONN_STATUS=`(echo > /dev/tcp/$SERVICE_ADDR/$SERVICE_PORT) >/dev/null 2>&1 && echo "UP" || echo "DOWN"`
+  echo -e "\t SERVICE connection status: $CONN_STATUS"
+  echo -e "\t waiting 5s for Service connetion..."
+  sleep 5
+  let COUNTER=COUNTER+1
+done
+
+#reset wp-config.php
+rm -f wp-config.php
+wp --allow-root core config \
+  --dbhost=mysql \
+  --dbname=wordpress \
+  --dbuser=root \
+  --dbpass=wordpress --extra-php <<PHP
+PHP
+
+if ! $(wp --allow-root core is-installed); then
+  echo "installing wordpress..."
+  wp --allow-root core install \
+    --url="$WORDPRESS_URL" \
+    --title=InspirED \
+    --admin_email="$WORDPRESS_EMAIL" \
+    --admin_name="$WORDPRESS_ADMIN_NAME" \
+    --admin_password="$WORDPRESS_ADMIN_PASS"
+fi
+
+if [[ -z "$THEME" ]]; then
+  wp --allow-root theme activate $THEME
+fi
+wp --allow-root rewrite structure '/%postname%/'
+
+exec $@
