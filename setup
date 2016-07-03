@@ -19,8 +19,8 @@ rm -f wp-config.php
 wp --allow-root core config \
   --dbhost=mysql \
   --dbname=wordpress \
-  --dbuser=root \
-  --dbpass=wordpress --extra-php <<PHP
+  --dbuser=$DBUSER \
+  --dbpass=$DBPASS --extra-php <<PHP
 PHP
 
 if ! $(wp --allow-root core is-installed); then
