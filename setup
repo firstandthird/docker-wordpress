@@ -39,7 +39,7 @@ fi
 wp --allow-root rewrite structure '/%postname%/'
 
 if [[ -f "/setup-after" ]]; then
-  ./setup-after
+  bash /setup-after
 fi
 
 exec $@
