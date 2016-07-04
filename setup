@@ -23,6 +23,9 @@ wp --allow-root core config \
   --dbpass=$DBPASS --extra-php <<PHP
 PHP
 
+echo "define('WP_SITEURL', 'http://' . $_SERVER['SERVER_NAME']);" >> wp-config.php
+echo "define('WP_HOME', 'http://' . $_SERVER['SERVER_NAME']);" >> wp-config.php
+
 if ! $(wp --allow-root core is-installed); then
   echo "installing wordpress..."
   wp --allow-root core install \
