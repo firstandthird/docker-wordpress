@@ -18,7 +18,7 @@ done
 rm -f wp-config.php
 wp --allow-root core config \
   --dbhost=mysql \
-  --dbname=wordpress \
+  --dbname=$DBNAME \
   --dbuser=$DBUSER \
   --dbpass=$DBPASS --extra-php <<PHP
 PHP
