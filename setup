@@ -21,10 +21,16 @@ wp --allow-root core config \
   --dbname=$DBNAME \
   --dbuser=$DBUSER \
   --dbpass=$DBPASS --extra-php <<PHP
-PHP
+define( 'WP_CONTENT_DIR', \$_SERVER['DOCUMENT_ROOT'] . '/wp-content' );
+define( 'WP_PLUGIN_DIR', \$_SERVER['DOCUMENT_ROOT'] . '/wp-content/plugins' );
+define( 'PLUGINDIR', \$_SERVER['DOCUMENT_ROOT'] . '/wp-content/plugins' );
 
-echo "define('WP_SITEURL', 'http://' . \$_SERVER['SERVER_NAME']);" >> wp-config.php
-echo "define('WP_HOME', 'http://' . \$_SERVER['SERVER_NAME']);" >> wp-config.php
+define( 'WP_SITEURL', 'http://' . \$_SERVER['HTTP_HOST'] . '/');
+define( 'WP_HOME',    'http://' . \$_SERVER['HTTP_HOST'] . '/');
+define( 'WP_CONTENT_URL', 'http://' . \$_SERVER['HTTP_HOST'] . '/wp-content');
+define( 'WP_PLUGIN_URL',  'http://' . \$_SERVER['HTTP_HOST'] . '/wp-content/plugins');
+define( 'UPLOADS',  'wp-content/uploads' );
+PHP
 
 if ! $(wp --allow-root core is-installed); then
   echo "installing wordpress..."
