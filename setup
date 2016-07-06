@@ -33,6 +33,8 @@ define( 'UPLOADS',  'wp-content/uploads' );
 PHP
 
 if ! $(wp --allow-root core is-installed); then
+  echo "creating database"
+  wp --allow-root db create
   echo "installing wordpress..."
   wp --allow-root core install \
     --url="$WORDPRESS_URL" \
