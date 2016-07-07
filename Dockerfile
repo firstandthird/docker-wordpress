@@ -33,6 +33,7 @@ RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli
 
 RUN echo "alias wp='wp --allow-root'" >> ~/.bashrc
 
+ADD .htaccess /var/www/html/.htaccess
 ADD setup /setup
 
 ENTRYPOINT ["/setup"]
