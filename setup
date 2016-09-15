@@ -1,18 +1,24 @@
 #!/bin/bash
 
 #test if the service is up
-SERVICE_ADDR=mysql
-SERVICE_PORT=3306
-CONN_STATUS="DOWN"
-COUNTER=0
-while [ "$CONN_STATUS" == "DOWN" -a $COUNTER -lt 4 ]
-do
-  CONN_STATUS=`(echo > /dev/tcp/$SERVICE_ADDR/$SERVICE_PORT) >/dev/null 2>&1 && echo "UP" || echo "DOWN"`
-  echo -e "\t SERVICE connection status: $CONN_STATUS"
-  echo -e "\t waiting 5s for Service connetion..."
-  sleep 5
-  let COUNTER=COUNTER+1
-done
+if [[ -z "$DBHOST" ]]; then
+  DBHOST="mysql"
+fi
+
+if [[ -z "$DBCHECK" ]]; then
+  SERVICE_ADDR=$DBHOST
+  SERVICE_PORT=3306
+  CONN_STATUS="DOWN"
+  COUNTER=0
+  while [ "$CONN_STATUS" == "DOWN" -a $COUNTER -lt 4 ]
+  do
+    CONN_STATUS=`(echo > /dev/tcp/$SERVICE_ADDR/$SERVICE_PORT) >/dev/null 2>&1 && echo "UP" || echo "DOWN"`
+    echo -e "\t $DBHOST connection status: $CONN_STATUS"
+    echo -e "\t waiting 5s for $DBHOST connection..."
+    sleep 5
+    let COUNTER=COUNTER+1
+  done
+fi
 
 SKIPSALT=false
 CONFIG=$(cat <<PHP
@@ -49,7 +55,7 @@ fi
 #reset wp-config.php
 rm -f wp-config.php
 wp --allow-root core config \
-  --dbhost=mysql \
+  --dbhost=$DBHOST \
   --dbname=$DBNAME \
   --dbuser=$DBUSER \
   --dbpass=$DBPASS \
