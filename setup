@@ -20,7 +20,14 @@ if [[ -z "$DBCHECK" ]]; then
   done
 fi
 
-SKIPSALT=false
+if [[ -z "$WP_DEBUG" ]]; then
+  WP_DEBUG=false
+fi
+
+if [[ -z "$ENV" ]]; then
+  ENV='production'
+fi
+
 CONFIG=$(cat <<PHP
 define( 'DISALLOW_FILE_EDIT', true );
 define( 'WP_CONTENT_DIR', \$_SERVER['DOCUMENT_ROOT'] . '/wp-content' );
@@ -32,25 +39,22 @@ define( 'WP_HOME',    'http://' . \$_SERVER['HTTP_HOST'] . '/');
 define( 'WP_CONTENT_URL', 'http://' . \$_SERVER['HTTP_HOST'] . '/wp-content');
 define( 'WP_PLUGIN_URL',  'http://' . \$_SERVER['HTTP_HOST'] . '/wp-content/plugins');
 define( 'UPLOADS',  'wp-content/uploads' );
+define( 'WP_DEBUG', $WP_DEBUG );
+define( 'ENV', '$ENV' );
 PHP
 )
 
-if [[ -n "$AUTH_SALT" ]]; then
-  echo "Using salt from env vars"
-  SKIPSALT=true
-  CONFIG=$(cat <<PHP
+#additional wp-config settings
+if [[ -f "/wp-config" ]]; then
+  echo "Including additional settings from wp-config"
+  USER_CONFIG="$(cat /wp-config)"
+fi
+
+CONFIG=$(cat <<PHP
 $CONFIG
-define( 'AUTH_KEY',         "$AUTH_KEY");
-define( 'SECURE_AUTH_KEY',  "$SECURE_AUTH_KEY");
-define( 'LOGGED_IN_KEY',    "$LOGGED_IN_KEY");
-define( 'NONCE_KEY',        "$NONCE_KEY");
-define( 'AUTH_SALT',        "$AUTH_SALT");
-define( 'SECURE_AUTH_SALT', "$SECURE_AUTH_SALT");
-define( 'LOGGED_IN_SALT',   "$LOGGED_IN_SALT");
-define( 'NONCE_SALT',       "$NONCE_SALT");
+$USER_CONFIG
 PHP
 )
-fi
 
 #reset wp-config.php
 rm -f wp-config.php
