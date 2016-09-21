@@ -46,8 +46,9 @@ PHP
 
 #additional wp-config settings
 if [[ -f "/wp-config" ]]; then
-  echo "Including additional settings from wp-config"
+  echo "Including additional settings from wp-config and skipping salt generation"
   USER_CONFIG="$(cat /wp-config)"
+  SKIPSALT=true
 fi
 
 CONFIG=$(cat <<PHP
