@@ -28,16 +28,22 @@ if [[ -z "$ENV" ]]; then
   ENV='production'
 fi
 
+if [[ -z "$IS_HTTPS" ]]; then
+  PROTOCOL='http'
+else
+  PROTOCOL='https'
+fi
+
 CONFIG=$(cat <<PHP
 define( 'DISALLOW_FILE_EDIT', true );
 define( 'WP_CONTENT_DIR', \$_SERVER['DOCUMENT_ROOT'] . '/wp-content' );
 define( 'WP_PLUGIN_DIR', \$_SERVER['DOCUMENT_ROOT'] . '/wp-content/plugins' );
 define( 'PLUGINDIR', \$_SERVER['DOCUMENT_ROOT'] . '/wp-content/plugins' );
 
-define( 'WP_SITEURL', 'http://' . \$_SERVER['HTTP_HOST'] . '/');
-define( 'WP_HOME',    'http://' . \$_SERVER['HTTP_HOST'] . '/');
-define( 'WP_CONTENT_URL', 'http://' . \$_SERVER['HTTP_HOST'] . '/wp-content');
-define( 'WP_PLUGIN_URL',  'http://' . \$_SERVER['HTTP_HOST'] . '/wp-content/plugins');
+define( 'WP_SITEURL', '${PROTOCOL}://' . \$_SERVER['HTTP_HOST'] . '/');
+define( 'WP_HOME',    '${PROTOCOL}://' . \$_SERVER['HTTP_HOST'] . '/');
+define( 'WP_CONTENT_URL', '${PROTOCOL}://' . \$_SERVER['HTTP_HOST'] . '/wp-content');
+define( 'WP_PLUGIN_URL',  '${PROTOCOL}://' . \$_SERVER['HTTP_HOST'] . '/wp-content/plugins');
 define( 'UPLOADS',  'wp-content/uploads' );
 define( 'WP_DEBUG', $WP_DEBUG );
 define( 'ENV', '$ENV' );
