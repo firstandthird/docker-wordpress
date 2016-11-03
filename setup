@@ -30,8 +30,10 @@ fi
 
 if [[ -z "$IS_HTTPS" ]]; then
   PROTOCOL='http'
+  SERVER_HTTPS='off'
 else
   PROTOCOL='https'
+  SERVER_HTTPS='on'
 fi
 
 CONFIG=$(cat <<PHP
@@ -47,6 +49,7 @@ define( 'WP_PLUGIN_URL',  '${PROTOCOL}://' . \$_SERVER['HTTP_HOST'] . '/wp-conte
 define( 'UPLOADS',  'wp-content/uploads' );
 define( 'WP_DEBUG', $WP_DEBUG );
 define( 'ENV', '$ENV' );
+\$_SERVER['HTTPS'] = '$SERVER_HTTPS';
 PHP
 )
 
