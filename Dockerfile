@@ -16,8 +16,8 @@ RUN { \
 } > /usr/local/etc/php/conf.d/opcache-recommended.ini
 
 #https://github.com/docker-library/wordpress/blob/master/fpm/Dockerfile
-ENV WORDPRESS_VERSION 4.7.5
-ENV WORDPRESS_SHA1 fbe0ee1d9010265be200fe50b86f341587187302
+ENV WORDPRESS_VERSION 4.9.8
+ENV WORDPRESS_SHA1 0945bab959cba127531dceb2c4fed81770812b4f
 
 # upstream tarballs include ./wordpress/ so this gives us /usr/src/wordpress
 RUN curl -o wordpress.tar.gz -SL https://wordpress.org/wordpress-${WORDPRESS_VERSION}.tar.gz \
@@ -34,8 +34,8 @@ RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli
 
 RUN echo "alias wp='wp --allow-root'" >> ~/.bashrc
 
-ADD .htaccess /var/www/html/.htaccess
-ADD setup /setup
+COPY .htaccess /var/www/html/.htaccess
+COPY setup /setup
 
 ENTRYPOINT ["/setup"]
 CMD ["apache2-foreground"]
