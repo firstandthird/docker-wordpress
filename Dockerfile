@@ -4,7 +4,7 @@ RUN a2enmod rewrite expires
 
 # install the PHP extensions we need
 RUN apt-get update && \
-  apt-get install -y git libpng-dev libjpeg-dev mysql-client && \
+  apt-get install -y git libpng-dev libjpeg-dev default-mysql-client default-libmysqlclient-dev && \
   rm -rf /var/lib/apt/lists/* && \
   docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr && \
   docker-php-ext-install gd mysqli opcache
@@ -16,8 +16,8 @@ RUN { \
 } > /usr/local/etc/php/conf.d/opcache-recommended.ini
 
 #https://github.com/docker-library/wordpress/blob/master/fpm/Dockerfile
-ENV WORDPRESS_VERSION 4.9.8
-ENV WORDPRESS_SHA1 0945bab959cba127531dceb2c4fed81770812b4f
+ENV WORDPRESS_VERSION 5.3.2
+ENV WORDPRESS_SHA1 fded476f112dbab14e3b5acddd2bcfa550e7b01b
 
 # upstream tarballs include ./wordpress/ so this gives us /usr/src/wordpress
 RUN curl -o wordpress.tar.gz -SL https://wordpress.org/wordpress-${WORDPRESS_VERSION}.tar.gz \
